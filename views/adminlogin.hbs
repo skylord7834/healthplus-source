@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login To HEALTH⁺</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgb(255, 192, 255);
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid white;
+            border-radius: 4px;
+
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color:rgb(119, 236, 119);
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: rgb(91, 183, 91);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .register-link a {
+            color: rgb(117, 117, 251);
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Login Page</h1>
+        <form id="loginForm" action="admindetail" method="post">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" name="admin_email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" name="admin_password">
+                 {{#if error}}
+              <span style="color: red;">{{error}}</span>
+                  {{/if}}
+            </div>
+        
+      
+         <button type="submit" class="btn">Login</button>
+        </form>
+        <div class="register-link">
+            <!-- <p>New user? <a href="register">Register now</a></p> -->
+        </div>
+    </div>
+
+    <script>
+       /* document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            alert('Login successful!');
+        });*/
+    </script>
+    {{!-- <script src="main.js"></script> --}}
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthPlus Admin Dashboard</title>
+    {{!-- <link rel="stylesheet" href="styles.css"> --}}
+    <style>
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    background-color: white;
+}
+
+.sidebar {
+    background-color: rgb(38, 57, 95);
+    color: white;
+    width: 250px;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: white;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 20px;
+}
+
+.sidebar ul li a {
+    color: rgb(175, 201, 211);
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.sidebar ul li a:hover {
+    background-color: rgb(46, 63, 98);
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
+.header {
+    background-color: rgb(232, 223, 223);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 250px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: rgb(46, 46, 92);
+}
+
+.card p {
+    font-size: 24px;
+    margin: 0;
+    color: rgb(40, 40, 65);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .content {
+        flex-direction: column;
+    }
+}
+
+    </style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        <h4>HealthPlus Admin Panel</h4>
+        <ul>
+            
+            <li><a href="patient">Patients</a></li>
+            <li><a href="appointment">Appointments</a></li>
+            <li><a href="doctor">Doctors</a></li>
+            <li><a href="logout">Logout</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Health Plus Dashboard</h1>
+        </div>
+        <div class="content">
+            <div class="card">
+                <h3>Patients</h3>
+               <p id="patients-count"></p>
+            </div>
+            <div class="card">
+                <h3>Appointments</h3>
+                <p id="appointments-count"></p>
+            </div>
+            <div class="card">
+                <h3>Doctors</h3>
+                <p>0</p>
+            </div>
+          
+        </div>
+    </div>
+    <script>
+ 
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    //const toggleButton = document.createElement('button');
+    
+    toggleButton.style.position = 'absolute';
+    toggleButton.style.top = '20px';
+    toggleButton.style.right = '20px';
+    toggleButton.style.padding = '10px 20px';
+    toggleButton.style.backgroundColor = '#2c3e50';
+    toggleButton.style.color = 'white';
+    toggleButton.style.border = 'none';
+    toggleButton.style.borderRadius = '4px';
+    document.body.appendChild(toggleButton);
+
+    toggleButton.addEventListener('click', () => {
+        sidebar.classList.toggle('hidden');
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/appointcount')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('appointments-count').innerText = data.count;
+             
+        })
+        .catch(error => {
+            console.error('Error fetching the count:', error);
+            document.getElementById('appointments-count').innerText = 'Error';
+            
+        });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/patientcount')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('patients-count').innerText = data.pt_count;
+             
+        })
+        .catch(error => {
+            console.error('Error fetching the count:', error);
+            document.getElementById('patients-count').innerText = 'Error';
+            
+        });
+});
+
+
+
+
+
+    </script>
+    {{!-- <script src="main.js"></script> --}}
+</body>
+</html>

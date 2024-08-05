@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="content" id="patients-content">
+        <h2>Appointment Details</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>patient id</th>
+                    <th>patient name</th>
+                    <th>patient contact</th>
+                    <th>patient age</th>
+                    <th>hospital name</th>
+                    <th>department name</th>
+                    <th>doctor name</th>
+                    <th>appointment date</th>
+                    <th>appoint time</th>
+                    <th>payment amount</th>
+                    <th>payment status</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+               {{#each items}}
+            <tr>
+                <td>{{this._id}}</td>
+                <td>{{this.patientname}}</td>
+                <td>{{this.patientcontact}}</td>
+                <td>{{this.patientage}}</td>
+                <td>{{this.hospitalname}}</td>
+                <td>{{this.departmentname}}</td>
+                <td>{{this.doctorname}}</td>
+                <td>{{this.appointdate}}</td>
+                <td>{{this.appointtime}}</td>
+                <td>{{this.paymentamount}}</td>
+                <td>{{this.paymentstatus}}</td>
+                <td><button style="padding:15px;background-color:red;color:aliceblue;">remove</button></td>
+            </tr>
+        {{/each}}
+               
+
+            </tbody>
+        </table>
+        </div>
+        
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Doctor Filter Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color:cadetblue;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid rgb(237, 220, 220);
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .form-container h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid white;
+            border-radius: 5px;
+        }
+
+        .form-group button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgb(9, 178, 9);
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: rgb(29, 113, 29);
+        }
+        .required::after {
+         content: '*';
+         color: red;
+         margin-left: 5px;
+         }
+
+        @media (min-width: 768px) {
+            .form-group {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .form-group label {
+                flex: 1;
+                margin-bottom: 0;
+            }
+
+            .form-group input,
+            .form-group select {
+                flex: 2;
+            }
+        }
+
+        .doctor {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid grey;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: grey;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Appointment Form</h1>
+        <form id="doctor-form" action="appoint" method="post">
+
+            <div class="form-group">
+                <label for="patient-name"  class="required">Patient Name:</label>
+                <input type="text" id="patient-name" name="patientname" required>
+            </div>
+           
+            <div class="form-group">
+                <label for="contactDetail"  class="required">Contact Detail:</label><br>
+                <input type="tel" id="contactDetail" name="patientcontact" required>
+            </div> 
+            <div class="form-group">
+                <label for="age"  class="required">Age:</label><br>
+                <input type="number" id="age" name="patientage" required>
+            </div> 
+            
+            <div class="form-group">
+                <label for="hospital">Choose a Hospital:</label>
+                <select id="hospital" name="hospitalname" onchange="filterDoctors()">
+                    <option value="none">Select a Hospital</option>
+                    <option value="Medicare Hospital">Medicare Hospital</option>
+                    <option value="Global Health Clinic">Global Health Clinic</option>
+                    <option value="Sunrise Medical Center">Sunrise Medical Center</option>
+                    <option value="Heal Well Hospital">Heal Well Hospital</option>
+
+                    <option value="Care Hospital">Care Hospital</option>
+
+                    <option value="MedLife Hospital">MedLife Hospital</option>
+
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="department">Choose a Department:</label>
+                <select id="department" name="departmentname" onchange="filterDoctors()">
+                    <option value="none">Select a Department</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="neurology">Neurology</option>
+                    <option value="orthopedics">Orthopedics</option>
+                    {{!-- <option value="pediatrics">Pediatrics</option> --}}
+                    <option value="nephrology">Nephrology</option>
+                    <option value="dermatology">Dermatology</option>
+                    <option value="dermatology">Dermatology</option>
+
+
+
+
+
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="doctor">Choose a Doctor:</label>
+                <select id="doctor" name="doctorname" onchange="generatePayment()">
+                    <option value="none">Select a Doctor</option>
+                    <option class="doctor" data-hospital="Medicare Hospital" data-department="cardiology">Dr. Smith (Cardiology, Medicare Hospital)</option>
+                    <option class="doctor" data-hospital="Medicare Hospital" data-department="neurology">Dr. Martinez (Neurology, Medicare Hospital)</option>
+                    <option class="doctor" data-hospital="Medicare Hospital" data-department="neurology">Dr. Johnson (Neurology, Medicare Hospital)</option>
+                    <option class="doctor" data-hospital="Medicare Hospital" data-department="orthopedics">Dr. Brown (Orthopedics, Medicare Hospital)</option>
+                    <option class="doctor" data-hospital="Medicare Hospital" data-department="dermatology">Dr. Jones (Dermatology, Medicare Hospital)</option>
+                    <option class="doctor" data-hospital="Medicare Hospital" data-department="cardiology">Dr. Garcia (Cardiology, Medicare Hospital)</option>
+
+                    <option class="doctor" data-hospital="Global Health Clinic" data-department="cardiology">Dr. Martinez (Cardiology, Global Health Clinic)</option>
+                    <option class="doctor" data-hospital="Global Health Clinic" data-department="neurology">Dr. Johnson (Neurology, Global Health Clinic)</option>
+                    <option class="doctor" data-hospital="Global Health Clinic" data-department="neurology">Dr. Brown (Neurology, Global Health Clinic)</option>
+                    <option class="doctor" data-hospital="Global Health Clinic" data-department="orthopedics">Dr. Garcia (orthopedics, Global Health Clinic)</option>
+                    <option class="doctor" data-hospital="Global Health Clinic" data-department="dermatology">Dr. Smith (Dermatology, Global Health Clinic)</option>
+                    <option class="doctor" data-hospital="Global Health Clinic" data-department="cardiology">Dr. Garcia (Cardiology, Global Health Clinic)</option>
+
+                    {{!-- <option class="doctor" data-hospital="Global Health Clinic" data-department="cardiology">Dr. Garcia (Cardiology, Global Health Clinic)</option> --}}
+                    {{!-- <option class="doctor" data-hospital="MedLife Hospital" data-department="neurology">Dr. Martinez (Neurology, MedLife Hospital)</option> --}}
+                    {{!-- <option class="doctor" data-hospital="MedLife Hospital" data-department="neurology">Dr. Martinez (Neurology, MedLife Hospital)</option> --}}
+                    {{!-- <option class="doctor" data-hospital="MedLife Hospital" data-department="neurology">Dr. Martinez (Neurology, MedLife Hospital)</option> --}}
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="appointdate"  class="required">Appoint Date</label><br>
+                <input type="date" id="appointdate" name="appointdate" required>
+            </div>
+            <div class="form-group">
+                <label for="appointtime"  class="required">Appoint time</label><br>
+                <input type="time" id="appointtime" name="appointtime" required >
+            </div>
+            
+            <div class="form-group">
+                <label for="payment">Payment Amount ($):</label>
+                <input type="text" id="payment" name="paymentamount" readonly>
+            </div>
+
+            <div class="form-group">
+                <button type="button" onclick="openPaymentModal()">Pay</button>
+            </div>
+
+            <div class="form-group">
+                <label for="payment-status">Payment Status:</label>
+                <input type="text" id="payment-status" name="paymentstatus" readonly>
+            </div>
+            <div class="form-group">
+                <button type="submit" style="width:100%;padding:15px;color:white;background-color: green;border-radius: 10px;" onclick="bookSuccess()">Book Appointment</button>
+             </div>
+        </form>
+    </div>
+
+    <div id="paymentModal" class="modal">
+        
+        <div class="modal-content">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <h2>Enter Card Details</h2>
+            <div class="form-group">
+                <label for="name">Cardholder's Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="card-number">Card Number:</label>
+                <input type="number" id="card-number" name="card-number" required>
+            </div>
+            <div class="form-group">
+                <label for="expiry-date">Expiry Date:</label>
+                <input type="text" id="expiry-date" name="expiry-date" placeholder="eg: 12/2030" required>
+            </div>
+            <div class="form-group">
+                <label for="cvv">CVV:</label>
+                <input type="number" id="cvv" name="cvv" required>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="processPayment()">Submit Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterDoctors() {
+            var hospital = document.getElementById("hospital").value;
+            var department = document.getElementById("department").value;
+            var doctors = document.querySelectorAll(".doctor");
+
+            doctors.forEach(function(doctor) {
+                if ((hospital === "none" || doctor.getAttribute("data-hospital") === hospital) &&
+                    (department === "none" || doctor.getAttribute("data-department") === department)) {
+                    doctor.style.display = "block";
+                } else {
+                    doctor.style.display = "none";
+                }
+            });
+
+            document.getElementById("doctor").selectedIndex = 0;
+            document.getElementById("payment").value = '';
+        }
+
+        function generatePayment() {
+            var doctorSelect = document.getElementById("doctor");
+            var doctor = doctorSelect.options[doctorSelect.selectedIndex];
+            if (doctor.value !== "none") {
+                var department = doctor.getAttribute("data-department");
+                var payment;
+                switch(department) {
+                    case 'cardiology':
+                        payment = (Math.random() * 100 + 150).toFixed(2); 
+                        break;
+                    case 'neurology':
+                        payment = (Math.random() * 100 + 200).toFixed(2); 
+                        break;
+                    case 'orthopedics':
+                        payment = (Math.random() * 100 + 100).toFixed(2); 
+                        break;
+                    case 'dermatology':
+                        payment = (Math.random() * 100 + 50).toFixed(2); 
+                        break;
+
+                    default:
+                        payment = 0;
+                }
+                document.getElementById("payment").value = payment;
+            } else {
+                document.getElementById("payment").value = '';
+            }
+        }
+        function bookSuccess(){
+            alert("appointment request successfull");
+        }
+
+        function openPaymentModal() {
+            document.getElementById("paymentModal").style.display = "block";
+        }
+
+        function closePaymentModal() {
+            document.getElementById("paymentModal").style.display = "none";
+        }
+
+        function processPayment() {
+           
+            alert("Payment processing...");
+
+            var paymentStatus = "Payment Successful";
+
+            document.getElementById("payment-status").value = paymentStatus;
+
+            var formData = {
+                patientName: document.getElementById("patient-name").value,
+                hospital: document.getElementById("hospital").value,
+                department: document.getElementById("department").value,
+                doctor: document.getElementById("doctor").value,
+                payment: document.getElementById("payment").value,
+                paymentStatus: paymentStatus,
+                cardNumber: document.getElementById("card-number").value,
+                expiryDate: document.getElementById("expiry-date").value,
+                cvv: document.getElementById("cvv").value
+            };
+
+            fetch('/api/payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                closePaymentModal();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                closePaymentModal();
+            });
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("paymentModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
